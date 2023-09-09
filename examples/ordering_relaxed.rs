@@ -1,18 +1,22 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Arc;
 use std::thread;
 
 fn main() {
     // 创建一个原子计数器
-    let counter = AtomicUsize::new(0);
+    // let counter = AtomicUsize::new(0);
+    let counter = Arc::new(AtomicUsize::new(0));
     // 创建两个线程, 分别对计数器进行递增操作
+    let counter1 = counter.clone();
     let thread1 = thread::spawn(move || {
-        for _ in 0..1_000_000 {
-            counter.fetch_add(1, Ordering::Relaxed);
+        for _ in 0..10_000_000 {
+            counter1.fetch_add(1, Ordering::Relaxed);
         }
     });
+    let counter2 = counter.clone();
     let thread2 = thread::spawn(move || {
-        for _ in 0..1_000_000 {
-            counter.fetch_add(1, Ordering::Relaxed);
+        for _ in 0..10_000_000 {
+            counter2.fetch_add(1, Ordering::Relaxed);
         }
     });
     // 等待两个线程结束
