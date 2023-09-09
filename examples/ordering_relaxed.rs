@@ -1,8 +1,10 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::thread;
+use std::time::Instant;
 
 fn main() {
+    let start = Instant::now();
     // 创建一个原子计数器
     // let counter = AtomicUsize::new(0);
     let counter = Arc::new(AtomicUsize::new(0));
@@ -24,4 +26,5 @@ fn main() {
     thread2.join().unwrap();
     // 打印计数器的值
     println!("Counter: {}", counter.load(Ordering::Relaxed));
+    println!("Time: {} ms", start.elapsed().as_millis());
 }
